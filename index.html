@@ -448,7 +448,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-end">
             <div class="sm:col-span-5">
               <label class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Nome da Perícia</label>
-              <input type="text" id="newSkillNameInput" placeholder="Ex: Tecnologia, Pilotagem..." class="w-full bg-[#0b0d10] border border-gray-700 focus:border-amber-400 rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none" />
+              <input type="text" id="newSkillNameInput" placeholder="Ex: Pilotagem..." class="w-full bg-[#0b0d10] border border-gray-700 focus:border-amber-400 rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none" />
             </div>
             <div class="sm:col-span-4">
               <label class="block text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Atributo Vinculado</label>
@@ -674,17 +674,19 @@
       { id: 'oficio', name: 'OFÍCIO', attr: 'mente', editableSpecialty: true },
       { id: 'percepcao', name: 'PERCEPÇÃO', attr: 'mente', editableSpecialty: false },
       { id: 'persuasao', name: 'PERSUASÃO', attr: 'emocao', editableSpecialty: false },
+      { id: 'pesquisar', name: 'PESQUISAR', attr: 'mente', editableSpecialty: false },
       { id: 'pontaria', name: 'PONTARIA', attr: 'fisico', editableSpecialty: false },
       { id: 'sobrevivencia', name: 'SOBREVIVÊNCIA', attr: 'mente', editableSpecialty: false },
+      { id: 'tecnologia', name: 'TECNOLOGIA', attr: 'mente', editableSpecialty: false },
       { id: 'vigor', name: 'VIGOR', attr: 'fisico', editableSpecialty: false }
     ];
 
     const ATTR_LABELS = { fisico: 'FÍSICO', mente: 'MENTE', emocao: 'EMOÇÃO' };
 
-    const STORAGE_KEY = 'sacrilegio_rpg_characters_v3';
-    const ACTIVE_ID_KEY = 'sacrilegio_rpg_active_id_v3';
-    const GM_UNLOCKED_KEY = 'sacrilegio_gm_unlocked_v3';
-    const SITE_UNLOCKED_KEY = 'sacrilegio_site_unlocked_v3';
+    const STORAGE_KEY = 'sacrilegio_rpg_characters_v4';
+    const ACTIVE_ID_KEY = 'sacrilegio_rpg_active_id_v4';
+    const GM_UNLOCKED_KEY = 'sacrilegio_gm_unlocked_v4';
+    const SITE_UNLOCKED_KEY = 'sacrilegio_site_unlocked_v4';
 
     let characters = [];
     let activeCharacterId = null;
@@ -727,22 +729,48 @@
         attributes: { fisico: 6, mente: 8, emocao: 6 },
         skillsList: skillsList,
         abilities: [],
-        mentalAbilityVal: 0, // tracker count for impeto/analise
+        mentalAbilityVal: 0,
         relations: [],
         notes: '',
         updatedAt: Date.now()
       };
     }
 
+    // Ensures all default skills (including Pesquisar and Tecnologia) are present across all characters, preserving existing custom dice/specialties
     function normalizeCharacterData(char) {
       if (!Array.isArray(char.skillsList)) {
-        const legacyMap = char.skills || {};
-        char.skillsList = DEFAULT_SKILLS_LIST.map(def => {
-          const oldEntry = legacyMap[def.id] || {};
-          return { id: def.id, name: def.name, attr: def.attr, editableSpecialty: def.editableSpecialty, die: oldEntry.die || 4, specialty: oldEntry.specialty || '' };
-        });
+        char.skillsList = [];
       }
+      
+      const existingMap = new Map();
+      char.skillsList.forEach(s => existingMap.set(s.id, s));
+
+      char.skillsList = DEFAULT_SKILLS_LIST.map(def => {
+        const found = existingMap.get(def.id);
+        if (found) {
+          return {
+            id: def.id,
+            name: def.name,
+            attr: def.attr,
+            editableSpecialty: def.editableSpecialty,
+            die: found.die || 4,
+            specialty: found.specialty || ''
+          };
+        } else {
+          return {
+            id: def.id,
+            name: def.name,
+            attr: def.attr,
+            editableSpecialty: def.editableSpecialty,
+            die: 4,
+            specialty: ''
+          };
+        }
+      });
+
+      // Keep sorted alphabetically in PT-BR
       char.skillsList.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }));
+
       if (!Array.isArray(char.abilities)) char.abilities = [];
       if (!Array.isArray(char.relations)) char.relations = [];
       if (char.mentalAbilityVal === undefined) char.mentalAbilityVal = 0;
@@ -1008,7 +1036,7 @@
             </div>
             <div class="w-20 sm:w-24 pl-1 flex items-center justify-between shrink-0">
               <span class="text-[11px] sm:text-xs font-semibold tracking-wider text-gray-400 uppercase">${attrLabel}</span>
-              <button type="button" onclick="removeSkill('${skill.id}')" class="p-1 rounded-lg text-gray-600 hover:text-red-400 hover:bg-red-950/40 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+              <button type="button" onclick="removeGlobalSkill('${skill.id}')" class="p-1 rounded-lg text-gray-600 hover:text-red-400 hover:bg-red-950/40 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition" title="Excluir perícia da mesa"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
             </div>
           </div>
         `;
@@ -1024,7 +1052,6 @@
       const totalCount = 1 + customAbilities.length;
       countLabel.textContent = `${totalCount} ${totalCount === 1 ? 'habilidade' : 'habilidades'}`;
 
-      // Render Mental Characteristic Main Ability as Fixed #1 Box
       let trackerMarkup = '';
       if (mentalDef.hasTracker) {
         const val = Number(char.mentalAbilityVal || 0);
@@ -1047,7 +1074,6 @@
         </div>
       `;
 
-      // Render custom abilities
       html += customAbilities.map((ab, idx) => `
         <div class="bg-[#0d1015] border border-gray-800 rounded-xl p-3 space-y-2 relative group">
           <div class="flex items-center justify-between gap-2">
@@ -1372,7 +1398,7 @@
       const char = getActiveCharacter();
       if (!char) return;
       char.mental = key;
-      char.mentalAbilityVal = 0; // reset tracker on change
+      char.mentalAbilityVal = 0;
       saveState();
       renderPlayerSheet();
       document.getElementById('mentalOptionsContainer').classList.add('hidden');
@@ -1465,30 +1491,61 @@
     }
 
     function confirmAddNewSkill() {
-      const char = getActiveCharacter();
-      if (!char) return;
       const rawName = document.getElementById('newSkillNameInput').value.trim();
       if (!rawName) return;
-      const skills = normalizeCharacterData(char).skillsList;
-      skills.push({
-        id: 'sk_' + Date.now(),
-        name: rawName.toUpperCase(),
-        attr: document.getElementById('newSkillAttrSelect').value,
-        editableSpecialty: document.getElementById('newSkillEditableSpecCheck').checked,
-        die: 4, specialty: ''
+      
+      const newId = 'sk_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5);
+      const attrVal = document.getElementById('newSkillAttrSelect').value;
+      const isEditable = document.getElementById('newSkillEditableSpecCheck').checked;
+      const formattedName = rawName.toUpperCase();
+
+      // Add globally to DEFAULT_SKILLS_LIST so future characters get it too
+      DEFAULT_SKILLS_LIST.push({
+        id: newId,
+        name: formattedName,
+        attr: attrVal,
+        editableSpecialty: isEditable
       });
-      skills.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }));
+
+      // Add to all active characters
+      characters.forEach(c => {
+        if (!Array.isArray(c.skillsList)) c.skillsList = [];
+        c.skillsList.push({
+          id: newId,
+          name: formattedName,
+          attr: attrVal,
+          editableSpecialty: isEditable,
+          die: 4,
+          specialty: ''
+        });
+        c.skillsList.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }));
+      });
+
       saveState();
-      renderSkillsList(char);
+      renderPlayerSheet();
       toggleNewSkillForm(false);
+      showToast('Perícia Global Adicionada', `${formattedName} adicionada para todos os jogadores.`);
     }
 
-    function removeSkill(skillId) {
-      const char = getActiveCharacter();
-      if (!char) return;
-      char.skillsList = normalizeCharacterData(char).skillsList.filter(s => s.id !== skillId);
+    function removeGlobalSkill(skillId) {
+      // Prevent deleting the core official 22 default skills if desired, or allow global removal
+      const targetDef = DEFAULT_SKILLS_LIST.find(s => s.id === skillId);
+      const skillName = targetDef ? targetDef.name : 'Perícia';
+
+      // Remove from DEFAULT_SKILLS_LIST
+      const defIdx = DEFAULT_SKILLS_LIST.findIndex(s => s.id === skillId);
+      if (defIdx !== -1) DEFAULT_SKILLS_LIST.splice(defIdx, 1);
+
+      // Remove from all characters
+      characters.forEach(c => {
+        if (Array.isArray(c.skillsList)) {
+          c.skillsList = c.skillsList.filter(s => s.id !== skillId);
+        }
+      });
+
       saveState();
-      renderSkillsList(char);
+      renderPlayerSheet();
+      showToast('Perícia Removida', `${skillName} removida de todas as fichas.`);
     }
 
     function addAbilityBox() {
