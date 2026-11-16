@@ -70,6 +70,56 @@
 </head>
 <body class="min-h-screen flex flex-col bg-obsidian text-gray-100 selection:bg-red-900 selection:text-white">
 
+  <!-- ==================== SITE ACCESS LOCK SCREEN ==================== -->
+  <div id="siteLockScreen" class="fixed inset-0 z-[100] bg-[#080a0d] flex flex-col items-center justify-center p-4">
+    <div class="bg-[#13161c] border border-gray-800 rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl space-y-6 text-center">
+      <!-- Logo -->
+      <div class="w-20 h-20 mx-auto rounded-2xl bg-[#0d1015] border border-gray-800 flex items-center justify-center p-2 shadow-inner">
+        <svg viewBox="0 0 200 140" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-label="Logo Sacrilégio">
+          <defs>
+            <clipPath id="planetClipLock">
+              <circle cx="100" cy="70" r="52" />
+            </clipPath>
+          </defs>
+          <path d="M 12 96 C 4 82, 42 56, 98 38 C 154 20, 192 22, 196 36" fill="none" stroke="#6c5e64" stroke-width="11" stroke-linecap="round" />
+          <circle cx="100" cy="70" r="52" fill="#2c3e55" />
+          <g clip-path="url(#planetClipLock)" fill="#0d4459">
+            <path d="M 40 30 Q 65 22, 90 30 T 140 30 T 170 30 L 170 42 Q 140 34, 115 42 T 65 42 T 40 42 Z" transform="rotate(-18 100 70)" />
+            <path d="M 35 52 Q 60 44, 85 52 T 135 52 T 170 52 L 170 65 Q 140 57, 115 65 T 65 65 T 35 65 Z" transform="rotate(-18 100 70)" />
+            <path d="M 35 75 Q 60 67, 85 75 T 135 75 T 170 75 L 170 88 Q 140 80, 115 88 T 65 88 T 35 88 Z" transform="rotate(-18 100 70)" />
+            <path d="M 40 98 Q 65 90, 90 98 T 140 98 T 170 98 L 170 112 Q 140 104, 115 112 T 65 112 T 40 112 Z" transform="rotate(-18 100 70)" />
+          </g>
+          <path d="M 196 36 C 200 50, 160 76, 104 94 C 48 112, 16 110, 12 96" fill="none" stroke="#6c5e64" stroke-width="12" stroke-linecap="round" />
+          <g transform="translate(46, 94) rotate(-18)">
+            <rect x="0" y="-7" width="22" height="10" rx="2.5" fill="#050608" />
+            <rect x="2" y="-11" width="6" height="6" rx="1.5" fill="#050608" />
+            <line x1="6" y1="-2" x2="17" y2="-2" stroke="#475569" stroke-width="1.5" stroke-linecap="round" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="space-y-1">
+        <h1 class="font-display uppercase tracking-[0.16em] text-xl sm:text-2xl font-bold text-white">Acesso Restrito</h1>
+        <p class="text-xs text-gray-400">Digite a senha da campanha para acessar as fichas.</p>
+      </div>
+
+      <div class="space-y-2.5 text-left">
+        <input type="password"
+               id="sitePasswordInput"
+               onkeydown="if(event.key==='Enter') verifySitePassword()"
+               placeholder="Senha da mesa..."
+               class="w-full bg-[#0b0d10] border border-gray-700 focus:border-emerald-500 rounded-xl px-4 py-3 text-sm text-center text-white placeholder-gray-600 focus:outline-none transition" />
+        <p id="sitePasswordError" class="hidden text-xs text-red-400 text-center font-medium">Senha incorreta. Verifique com o Mestre.</p>
+      </div>
+
+      <button type="button"
+              onclick="verifySitePassword()"
+              class="w-full py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 active:scale-[0.99] text-white font-bold text-sm uppercase tracking-wider shadow-lg transition">
+        Entrar na Mesa
+      </button>
+    </div>
+  </div>
+
   <!-- ==================== TOP BAR ==================== -->
   <header class="sticky top-0 z-40 bg-[#0e1116]/95 backdrop-blur-md border-b border-gray-800/80 shadow-lg">
     <div class="max-w-4xl mx-auto px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2">
@@ -660,9 +710,10 @@
   <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
   <script>
     // =========================================================================
-    // CONFIGURAÇÃO DO MESTRE: Altere a senha abaixo antes de subir no GitHub!
+    // CONFIGURAÇÃO DE SENHAS: Senha geral do site e senha do Escudo do Mestre
     // =========================================================================
-    const GM_PASSWORD = '7SetePecados!';
+    const SITE_PASSWORD = 'jogadoresdogzz';
+    const GM_PASSWORD = 'gzzmestredetudo!';
 
     // 1. CONSTANTS & DEFINITIONS
     const DICE_TYPES = [4, 6, 8, 10, 12, 20];
@@ -716,14 +767,16 @@
     const ACTIVE_ID_KEY = 'sacrilegio_rpg_active_id_v1';
     const FIREBASE_URL_KEY = 'sacrilegio_rpg_firebase_url_v1';
     const GM_UNLOCKED_KEY = 'sacrilegio_gm_unlocked_v1';
+    const SITE_UNLOCKED_KEY = 'sacrilegio_site_unlocked_v1';
 
     let characters = [];
     let activeCharacterId = null;
-    let currentView = 'menu';
+    let currentView = 'menu'; // 'menu' | 'player' | 'gm'
     let openedFromGm = false;
     let pendingDeleteCharId = null;
     let isGmUnlocked = sessionStorage.getItem(GM_UNLOCKED_KEY) === 'true';
-    let firebaseUrl = localStorage.getItem(FIREBASE_URL_KEY) || 'https://sacrilegio-rpg-default-rtdb.firebaseio.com';
+    let isSiteUnlocked = localStorage.getItem(SITE_UNLOCKED_KEY) === SITE_PASSWORD;
+    let firebaseUrl = localStorage.getItem(FIREBASE_URL_KEY) || 'https://sacrilegio-rpg-default-rtdb.firebaseio.com/';
     let firebasePollInterval = null;
 
     const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('sacrilegio_sync') : null;
@@ -814,13 +867,45 @@
         activeCharacterId = characters[0].id;
       }
 
+      checkSiteLockState();
       updateGmLockIcon();
       buildMentalOptionsUI();
       renderAll();
       switchView('menu');
 
-      if (firebaseUrl) {
+      if (firebaseUrl && isSiteUnlocked) {
         startFirebaseSync();
+      }
+    }
+
+    // SITE ACCESS PASSWORD LOGIC
+    function checkSiteLockState() {
+      const lockScreen = document.getElementById('siteLockScreen');
+      if (!lockScreen) return;
+      if (!SITE_PASSWORD || isSiteUnlocked) {
+        lockScreen.classList.add('hidden');
+      } else {
+        lockScreen.classList.remove('hidden');
+        setTimeout(() => document.getElementById('sitePasswordInput')?.focus(), 50);
+      }
+    }
+
+    function verifySitePassword() {
+      const input = document.getElementById('sitePasswordInput');
+      const err = document.getElementById('sitePasswordError');
+      if (!input) return;
+
+      if (input.value === SITE_PASSWORD) {
+        isSiteUnlocked = true;
+        localStorage.setItem(SITE_UNLOCKED_KEY, SITE_PASSWORD);
+        err.classList.add('hidden');
+        checkSiteLockState();
+        if (firebaseUrl) {
+          startFirebaseSync();
+        }
+      } else {
+        err.classList.remove('hidden');
+        input.select();
       }
     }
 
@@ -848,54 +933,6 @@
 
       if (pushToCloud && firebaseUrl) {
         pushCharactersToFirebase();
-      }
-    }
-
-    // GM PASSWORD PROTECTION LOGIC
-    function requestGmView() {
-      if (!GM_PASSWORD || isGmUnlocked) {
-        switchView('gm');
-        return;
-      }
-      document.getElementById('gmPasswordInput').value = '';
-      document.getElementById('gmPasswordError').classList.add('hidden');
-      document.getElementById('gmPasswordModal').classList.remove('hidden');
-      setTimeout(() => document.getElementById('gmPasswordInput').focus(), 50);
-    }
-
-    function closeGmPasswordModal() {
-      document.getElementById('gmPasswordModal').classList.add('hidden');
-    }
-
-    function verifyGmPassword() {
-      const typed = document.getElementById('gmPasswordInput').value;
-      if (typed === GM_PASSWORD) {
-        isGmUnlocked = true;
-        sessionStorage.setItem(GM_UNLOCKED_KEY, 'true');
-        updateGmLockIcon();
-        closeGmPasswordModal();
-        switchView('gm');
-      } else {
-        document.getElementById('gmPasswordError').classList.remove('hidden');
-        document.getElementById('gmPasswordInput').select();
-      }
-    }
-
-    function lockGmView() {
-      isGmUnlocked = false;
-      sessionStorage.removeItem(GM_UNLOCKED_KEY);
-      updateGmLockIcon();
-      switchView('player');
-      showToast('Área Bloqueada', 'Senha será solicitada ao abrir o Escudo do Mestre.');
-    }
-
-    function updateGmLockIcon() {
-      const icon = document.getElementById('gmLockIcon');
-      if (!icon) return;
-      if (!GM_PASSWORD || isGmUnlocked) {
-        icon.classList.add('hidden');
-      } else {
-        icon.classList.remove('hidden');
       }
     }
 
@@ -956,14 +993,19 @@
       updateGmBadge();
     }
 
+    function updateGmBadge() {
+      const badge = document.getElementById('gmCountBadge');
+      if (badge) badge.textContent = characters.length;
+    }
+
     function renderCharacterMenu() {
       const grid = document.getElementById('menuCharactersGrid');
       if (!grid) return;
 
       const cardsHtml = characters.map(c => {
-        const avatarHtml = c.portrait
+        const imgMarkup = c.portrait
           ? `<img src="${c.portrait}" alt="${escapeHtml(c.charName)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />`
-          : `<div class="w-full h-full bg-[#0d1015] flex items-center justify-center text-gray-600 group-hover:text-gray-400 transition-colors">
+          : `<div class="w-full h-full flex items-center justify-center bg-[#0d1015] text-gray-600 group-hover:text-gray-400 transition">
                <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                </svg>
@@ -971,10 +1013,10 @@
 
         return `
           <button type="button"
-                  onclick="selectCharacterFromMenu('${c.id}')"
-                  class="group bg-surface hover:bg-[#191e28] border border-gray-800 hover:border-gray-500 rounded-2xl overflow-hidden shadow-lg transition-all flex flex-col text-center focus:outline-none">
-            <div class="w-full aspect-square overflow-hidden border-b border-gray-800/80 relative">
-              ${avatarHtml}
+                  onclick="openCharacterFromMenu('${c.id}')"
+                  class="group bg-surface hover:bg-[#191d26] border border-gray-800 hover:border-gray-600 rounded-2xl overflow-hidden shadow-lg transition-all flex flex-col text-center focus:outline-none">
+            <div class="w-full aspect-square overflow-hidden bg-[#0d1015] border-b border-gray-800/80">
+              ${imgMarkup}
             </div>
             <div class="p-3 w-full">
               <span class="font-display uppercase tracking-wider text-base sm:text-lg font-bold text-gray-100 group-hover:text-white block truncate">
@@ -985,23 +1027,25 @@
         `;
       }).join('');
 
-      const createNewCardHtml = `
+      const newCardHtml = `
         <button type="button"
                 onclick="createNewCharacterFromMenu()"
-                class="group bg-[#0e1117] hover:bg-[#151a24] border-2 border-dashed border-gray-800 hover:border-emerald-600/80 rounded-2xl overflow-hidden shadow-lg transition-all flex flex-col items-center justify-center text-center min-h-[200px] p-4 focus:outline-none">
-          <div class="w-14 h-14 rounded-2xl bg-emerald-950/50 border border-emerald-700/50 group-hover:bg-emerald-800/60 flex items-center justify-center text-emerald-400 group-hover:text-white text-3xl font-bold mb-3 transition">
-            +
+                class="group bg-[#0e1117] hover:bg-[#151a24] border-2 border-dashed border-gray-800 hover:border-emerald-600/70 rounded-2xl overflow-hidden shadow-lg transition-all flex flex-col items-center justify-center min-h-[210px] p-4 text-center focus:outline-none">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-950/50 border border-emerald-700/50 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform mb-3">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/>
+            </svg>
           </div>
-          <span class="font-display uppercase tracking-wider text-sm sm:text-base font-bold text-gray-300 group-hover:text-white">
+          <span class="font-display uppercase tracking-wider text-base font-bold text-gray-200 group-hover:text-emerald-300">
             Novo Personagem
           </span>
         </button>
       `;
 
-      grid.innerHTML = cardsHtml + createNewCardHtml;
+      grid.innerHTML = cardsHtml + newCardHtml;
     }
 
-    function selectCharacterFromMenu(charId) {
+    function openCharacterFromMenu(charId) {
       activeCharacterId = charId;
       openedFromGm = false;
       saveState(false);
@@ -1016,11 +1060,6 @@
       saveState();
       renderAll();
       switchView('player');
-    }
-
-    function updateGmBadge() {
-      const badge = document.getElementById('gmCountBadge');
-      if (badge) badge.textContent = characters.length;
     }
 
     function renderCharacterSelector() {
@@ -1253,8 +1292,8 @@
                   </span>
                   <button type="button"
                           onclick="event.stopPropagation(); promptDeleteCharacter('${c.id}')"
-                          title="Excluir personagem"
-                          class="p-1.5 rounded-lg bg-[#0d1015] hover:bg-red-950/80 text-gray-400 hover:text-red-400 border border-gray-800 hover:border-red-800/70 transition">
+                          title="Excluir ${escapeHtml(c.charName || 'personagem')}"
+                          class="p-1.5 rounded-lg bg-[#0d1015] hover:bg-red-950/80 border border-gray-800 hover:border-red-800 text-gray-400 hover:text-red-400 transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
@@ -1291,7 +1330,62 @@
       }).join('');
     }
 
-    // 6. INTERACTION HANDLERS
+    // 6. INTERACTION HANDLERS & GM PASSWORD PROTECTION
+    function requestGmView() {
+      if (isGmUnlocked) {
+        switchView('gm');
+      } else {
+        openGmPasswordModal();
+      }
+    }
+
+    function openGmPasswordModal() {
+      const modal = document.getElementById('gmPasswordModal');
+      const input = document.getElementById('gmPasswordInput');
+      const err = document.getElementById('gmPasswordError');
+      input.value = '';
+      err.classList.add('hidden');
+      modal.classList.remove('hidden');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeGmPasswordModal() {
+      document.getElementById('gmPasswordModal').classList.add('hidden');
+    }
+
+    function verifyGmPassword() {
+      const input = document.getElementById('gmPasswordInput');
+      const err = document.getElementById('gmPasswordError');
+      if (input.value === GM_PASSWORD) {
+        isGmUnlocked = true;
+        sessionStorage.setItem(GM_UNLOCKED_KEY, 'true');
+        updateGmLockIcon();
+        closeGmPasswordModal();
+        switchView('gm');
+      } else {
+        err.classList.remove('hidden');
+        input.select();
+      }
+    }
+
+    function lockGmView() {
+      isGmUnlocked = false;
+      sessionStorage.removeItem(GM_UNLOCKED_KEY);
+      updateGmLockIcon();
+      switchView('menu');
+      showToast('Escudo Bloqueado', 'A área do Mestre foi protegida por senha.');
+    }
+
+    function updateGmLockIcon() {
+      const icon = document.getElementById('gmLockIcon');
+      if (!icon) return;
+      if (isGmUnlocked) {
+        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>`;
+      } else {
+        icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>`;
+      }
+    }
+
     function switchView(view) {
       currentView = view;
       const menuView = document.getElementById('menuView');
@@ -1304,31 +1398,27 @@
       const inactiveClass = 'px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-gray-400 hover:text-gray-200';
       const activeClass = 'px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-gray-800 text-white shadow';
 
+      menuView.classList.add('hidden');
+      playerView.classList.add('hidden');
+      gmView.classList.add('hidden');
+
+      navMenu.className = inactiveClass;
+      navPlayer.className = inactiveClass;
+      navGm.className = inactiveClass + ' flex items-center gap-1.5';
+
       if (view === 'menu') {
         openedFromGm = false;
         menuView.classList.remove('hidden');
-        playerView.classList.add('hidden');
-        gmView.classList.add('hidden');
-        if (navMenu) navMenu.className = activeClass;
-        navPlayer.className = inactiveClass;
-        navGm.className = inactiveClass + ' flex items-center gap-1.5';
+        navMenu.className = activeClass;
         renderCharacterMenu();
       } else if (view === 'player') {
-        menuView.classList.add('hidden');
         playerView.classList.remove('hidden');
-        gmView.classList.add('hidden');
-        if (navMenu) navMenu.className = inactiveClass;
         navPlayer.className = activeClass;
-        navGm.className = inactiveClass + ' flex items-center gap-1.5';
         renderPlayerSheet();
-      } else {
+      } else if (view === 'gm') {
         openedFromGm = false;
-        menuView.classList.add('hidden');
-        playerView.classList.add('hidden');
         gmView.classList.remove('hidden');
-        if (navMenu) navMenu.className = inactiveClass;
         navGm.className = 'px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-red-900/90 text-white shadow flex items-center gap-1.5';
-        navPlayer.className = inactiveClass;
         renderGmScreen();
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1362,14 +1452,14 @@
 
     function promptDeleteCharacter(charId) {
       if (characters.length <= 1) {
-        showToast('Aviso', 'Você precisa manter pelo menos 1 ficha ativa na mesa.');
+        showToast('Aviso', 'Você precisa manter pelo menos 1 ficha ativa.');
         return;
       }
       const target = characters.find(c => c.id === charId);
       if (!target) return;
 
       pendingDeleteCharId = charId;
-      document.getElementById('deleteConfirmCharName').textContent = target.charName || 'Agente Sem Nome';
+      document.getElementById('deleteConfirmCharName').textContent = target.charName || 'Sem Nome';
       document.getElementById('deleteConfirmModal').classList.remove('hidden');
     }
 
@@ -1398,10 +1488,6 @@
       saveState();
       renderAll();
       showToast('Ficha Excluída', `${removedName} foi removido.`);
-    }
-
-    function deleteCurrentCharacter() {
-      promptDeleteCharacter(activeCharacterId);
     }
 
     function updateField(field, value) {
@@ -1455,6 +1541,7 @@
             char.portrait = compressedDataUrl;
             saveState();
             renderPlayerSheet();
+            renderCharacterMenu();
           }
         };
         img.src = e.target.result;
@@ -1469,6 +1556,7 @@
       document.getElementById('portraitInput').value = '';
       saveState();
       renderPlayerSheet();
+      renderCharacterMenu();
     }
 
     function buildMentalOptionsUI() {
@@ -1828,6 +1916,9 @@
           const remoteJson = JSON.stringify(remoteData);
           if (localJson !== remoteJson) {
             characters = remoteData;
+            if (!characters.some(c => c.id === activeCharacterId)) {
+              activeCharacterId = characters[0].id;
+            }
             localStorage.setItem(STORAGE_KEY, remoteJson);
             renderAll();
           }
