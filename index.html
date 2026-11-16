@@ -73,7 +73,6 @@
   <!-- ==================== SITE ACCESS LOCK SCREEN ==================== -->
   <div id="siteLockScreen" class="fixed inset-0 z-[100] bg-[#080a0d] flex flex-col items-center justify-center p-4">
     <div class="bg-[#13161c] border border-gray-800 rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl space-y-6 text-center">
-      <!-- Logo -->
       <div class="w-20 h-20 mx-auto rounded-2xl bg-[#0d1015] border border-gray-800 flex items-center justify-center p-2 shadow-inner">
         <svg viewBox="0 0 200 140" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-label="Logo Sacrilégio">
           <defs>
@@ -123,7 +122,6 @@
   <!-- ==================== TOP BAR ==================== -->
   <header class="sticky top-0 z-40 bg-[#0e1116]/95 backdrop-blur-md border-b border-gray-800/80 shadow-lg">
     <div class="max-w-4xl mx-auto px-3 sm:px-5 py-2.5 flex items-center justify-between gap-2">
-      <!-- Logo Only -->
       <div class="flex items-center shrink-0">
         <div id="headerLogoContainer" class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[#141820] border border-gray-800 flex items-center justify-center p-1 overflow-hidden shadow-inner">
           <svg viewBox="0 0 200 140" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" aria-label="Logo Sacrilégio">
@@ -150,7 +148,6 @@
         </div>
       </div>
 
-      <!-- Mode Switcher & Cloud Setup -->
       <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
         <div class="bg-[#161a22] p-1 rounded-xl border border-gray-800 flex items-center">
           <button id="navMenuBtn" onclick="switchView('menu')" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-gray-800 text-white shadow">
@@ -181,7 +178,7 @@
   <!-- ==================== MAIN CONTENT ==================== -->
   <main class="flex-1 w-full max-w-4xl mx-auto px-3 sm:px-5 py-4 sm:py-6 pb-24">
 
-    <!-- ==================== VIEW 0: CHARACTER SELECTION MENU ==================== -->
+    <!-- VIEW 0: CHARACTER SELECTION MENU -->
     <div id="menuView" class="space-y-6">
       <div class="text-center space-y-1.5 pt-2">
         <h1 class="font-display uppercase tracking-[0.15em] text-2xl sm:text-3xl font-bold text-white">
@@ -193,11 +190,11 @@
       </div>
 
       <div id="menuCharactersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        <!-- Populated dynamically via JS -->
+        <!-- Populated dynamically -->
       </div>
     </div>
 
-    <!-- ==================== VIEW 1: PLAYER CHARACTER SHEET ==================== -->
+    <!-- VIEW 1: PLAYER CHARACTER SHEET -->
     <div id="playerView" class="hidden space-y-5">
 
       <div id="gmEditingBanner" class="hidden bg-amber-950/40 border border-amber-700/60 rounded-2xl p-3 flex items-center justify-between gap-3">
@@ -305,7 +302,7 @@
               </button>
 
               <div id="mentalOptionsContainer" class="hidden mt-2.5 grid grid-cols-1 gap-2.5 bg-[#0a0c10] p-2.5 rounded-2xl border border-gray-800">
-                <!-- Populated dynamically via JS -->
+                <!-- Populated dynamically -->
               </div>
             </div>
           </div>
@@ -322,7 +319,6 @@
           <span class="text-[11px] text-gray-400">Toque nos números para editar o máximo</span>
         </div>
 
-        <!-- VIDA (PV) -->
         <div class="space-y-1.5">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold uppercase tracking-wider text-red-400">Pontos de Vida (PV)</span>
@@ -351,7 +347,6 @@
           </div>
         </div>
 
-        <!-- PONTOS DE DETERMINAÇÃO (PD) -->
         <div class="space-y-1.5">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Pontos de Determinação (PD)</span>
@@ -381,7 +376,7 @@
         </div>
       </section>
 
-      <!-- 3. ATRIBUTOS (FÍSICO, MENTE, EMOÇÃO) -->
+      <!-- 3. ATRIBUTOS -->
       <section class="bg-surface border border-gray-800/90 rounded-2xl p-4 sm:p-6 shadow-lg space-y-4">
         <div class="flex items-center justify-between border-b border-gray-800 pb-2.5">
           <h2 class="font-display uppercase tracking-wider text-base sm:text-lg text-gray-200">Atributos</h2>
@@ -422,7 +417,9 @@
           <span id="abilitiesCount" class="text-xs text-gray-400">0 habilidades</span>
         </div>
 
-        <div id="abilitiesList" class="space-y-3"></div>
+        <div id="abilitiesList" class="space-y-3">
+          <!-- Populated dynamically including characteristic mental main ability -->
+        </div>
 
         <button type="button" onclick="addAbilityBox()" class="w-full py-2.5 rounded-xl bg-[#0d1015] hover:bg-[#151a22] border border-dashed border-gray-700 hover:border-gray-500 text-gray-300 font-bold text-sm flex items-center justify-center gap-2 transition">
           <span class="text-lg leading-none">+</span>
@@ -477,7 +474,7 @@
         </button>
       </section>
 
-      <!-- 6. RELAÇÕES / PONTOS DE VÍNCULO (NEW) -->
+      <!-- 6. RELAÇÕES / PONTOS DE VÍNCULO -->
       <section class="bg-surface border border-gray-800/90 rounded-2xl p-4 sm:p-6 shadow-lg space-y-4">
         <div class="flex flex-col items-center justify-center pb-2 border-b border-gray-800/80 relative">
           <div class="px-6 py-1.5 rounded-xl bg-gradient-to-r from-transparent via-[#1c2028] to-transparent border-y border-gray-700/70">
@@ -488,9 +485,7 @@
           </p>
         </div>
 
-        <div id="relationsList" class="space-y-3">
-          <!-- Populated dynamically via JS -->
-        </div>
+        <div id="relationsList" class="space-y-3"></div>
 
         <button type="button" onclick="addRelationRow()" class="w-full py-2.5 rounded-xl bg-[#0d1015] hover:bg-[#151a22] border border-dashed border-gray-700 hover:border-gray-500 text-gray-300 font-bold text-sm flex items-center justify-center gap-2 transition">
           <span class="text-lg leading-none">+</span>
@@ -509,7 +504,7 @@
 
     </div>
 
-    <!-- ==================== VIEW 2: ESCUDO DO MESTRE (GM SCREEN) ==================== -->
+    <!-- VIEW 2: ESCUDO DO MESTRE (GM SCREEN) -->
     <div id="gmView" class="hidden space-y-5">
       <div class="bg-surface border border-gray-800/90 rounded-2xl p-4 sm:p-6 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -532,11 +527,11 @@
 
   </main>
 
-  <!-- ==================== DELETE CHARACTER CONFIRMATION MODAL ==================== -->
+  <!-- MODALS -->
   <div id="deleteConfirmModal" onclick="closeDeleteConfirmModal()" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
     <div onclick="event.stopPropagation()" class="bg-[#161a23] border border-gray-700 rounded-2xl p-5 w-full max-w-sm shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-        <h3 class="font-display uppercase tracking-wider text-base font-bold text-red-400 flex items-center gap-2">Excluir Personagem</h3>
+        <h3 class="font-display uppercase tracking-wider text-base font-bold text-red-400">Excluir Personagem</h3>
         <button type="button" onclick="closeDeleteConfirmModal()" class="text-gray-400 hover:text-white text-xl leading-none">&times;</button>
       </div>
       <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
@@ -549,11 +544,10 @@
     </div>
   </div>
 
-  <!-- ==================== GM PASSWORD MODAL ==================== -->
   <div id="gmPasswordModal" onclick="closeGmPasswordModal()" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
     <div onclick="event.stopPropagation()" class="bg-[#161a23] border border-gray-700 rounded-2xl p-5 w-full max-w-xs shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-gray-800 pb-2">
-        <h3 class="font-display uppercase tracking-wider text-base font-bold text-white flex items-center gap-2">Acesso do Mestre</h3>
+        <h3 class="font-display uppercase tracking-wider text-base font-bold text-white">Acesso do Mestre</h3>
         <button type="button" onclick="closeGmPasswordModal()" class="text-gray-400 hover:text-white text-xl leading-none">&times;</button>
       </div>
       <div class="space-y-2">
@@ -568,7 +562,6 @@
     </div>
   </div>
 
-  <!-- ==================== FLOATING DICE SELECTOR POPOVER ==================== -->
   <div id="dicePickerOverlay" onclick="closeDicePicker()" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-[1px] flex items-center justify-center p-4">
     <div onclick="event.stopPropagation()" class="bg-[#161a23] border border-gray-700 rounded-2xl p-4 w-full max-w-xs shadow-2xl space-y-3">
       <div class="flex items-center justify-between border-b border-gray-800 pb-2">
@@ -579,7 +572,6 @@
     </div>
   </div>
 
-  <!-- ==================== STAT EDIT MODAL ==================== -->
   <div id="statEditModal" onclick="closeStatEditModal()" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
     <div onclick="event.stopPropagation()" class="bg-[#161a23] border border-gray-700 rounded-2xl p-5 w-full max-w-sm shadow-2xl space-y-4">
       <h3 id="statModalTitle" class="font-display uppercase tracking-wider text-lg font-bold text-white">Editar Pontos</h3>
@@ -600,7 +592,6 @@
     </div>
   </div>
 
-  <!-- ==================== CLOUD / FIREBASE SYNC MODAL ==================== -->
   <div id="cloudModal" onclick="closeCloudModal()" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
     <div onclick="event.stopPropagation()" class="bg-[#161a23] border border-gray-700 rounded-2xl p-5 w-full max-w-lg shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-gray-800 pb-2.5">
@@ -620,7 +611,6 @@
     </div>
   </div>
 
-  <!-- ==================== DICE ROLL TOAST ==================== -->
   <div id="rollToast" class="pointer-events-none fixed bottom-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 translate-y-4">
     <div class="bg-[#181d27]/95 backdrop-blur-md border border-gray-600 shadow-2xl rounded-2xl px-5 py-3 flex items-center gap-4 min-w-[260px]">
       <div class="w-10 h-10 rounded-xl bg-red-900/50 border border-red-700/60 flex items-center justify-center text-xl">🎲</div>
@@ -631,7 +621,7 @@
     </div>
   </div>
 
-  <!-- ==================== SCRIPT ==================== -->
+  <!-- SCRIPT -->
   <script>
     const SITE_PASSWORD = 'jogadoresdogzz';
     const GM_PASSWORD = 'gzzmestredetudo!';
@@ -639,9 +629,31 @@
     const DICE_TYPES = [4, 6, 8, 10, 12, 20];
 
     const MENTAL_CHARACTERISTICS = {
-      Executor: { title: 'Executor', desc: 'Você age primeiro e pensa depois. E se não der certo da primeira vez, tenta de novo até conseguir, vencendo pela força de sua perceverança.' },
-      Analista: { title: 'Analista', desc: 'Você observa, entende e se prepara, para só então agir. Pode demorar para tomar uma atitude, mas quando o faz, é com a maior precisão possível.' },
-      Vigilante: { title: 'Vigilante', desc: 'Você está sempre atento aos arredores, aproveitando as brechas perfeitas para agir primeiro. Se adapta a imprevistos e não tem problemas em tomar decisões sob pressão.' }
+      Executor: {
+        title: 'Executor',
+        desc: 'Você age primeiro e pensa depois. E se não der certo da primeira vez, tenta de novo até conseguir, vencendo pela força de sua perceverança.',
+        abilityTitle: 'Ímpeto',
+        abilityDesc: 'Você possui uma barra de ímpeto, com cinco espaços. Sempre que faz um teste e falha, você preenche um espaço na barra de ímpeto. Como uma ação livre, você pode gastar espaços da barra de ímpeto para receber benefícios.\n• 1 espaço. Você recebe +4 em um teste.\n• 3 espaços. Você aumenta um atributo em um passo até o fim da cena.\n• 3 espaços. Em cenas de conflito, você faz uma ação extra.\nNo fim da cena, sua barra de ímpeto esvazia.',
+        hasTracker: true,
+        trackerMax: 5,
+        trackerValueKey: 'impetoVal'
+      },
+      Analista: {
+        title: 'Analista',
+        desc: 'Você observa, entende e se prepara, para só então agir. Pode demorar para tomar uma atitude, mas quando o faz, é com a maior precisão possível.',
+        abilityTitle: 'Análise',
+        abilityDesc: 'Você pode gastar uma ação para receber 2 marcadores de análise.\n• Quando faz um teste, pode gastar quantos marcadores quiser após rolar os dados. Para cada marcador gasto, pode mudar o resultado de um dado em +1 ou -1 (até o máximo do dado).\n• Você pode acumular no máximo 4 marcadores de análise e, no fim da cena, perde quaisquer marcadores não usados.',
+        hasTracker: true,
+        trackerMax: 4,
+        trackerValueKey: ' analiseVal'
+      },
+      Vigilante: {
+        title: 'Vigilante',
+        desc: 'Você está sempre atento aos arredores, aproveitando as brechas perfeitas para agir primeiro. Se adapta a imprevistos e não tem problemas em tomar decisões sob pressão.',
+        abilityTitle: 'Prontidão',
+        abilityDesc: 'Uma vez por rodada, quando você ou outro ser em alcance curto faz um teste, você pode gastar 2 PD para rolar novamente, ou para fazer o outro ser rolar novamente, um dos dados do teste cujo resultado não tenha sido 1.\nAlém disso, em combates, você pode fazer sua ação na fase dela ou em fases posteriores, e após qualquer ação daquela fase já ter sido rolada.',
+        hasTracker: false
+      }
     };
 
     const DEFAULT_SKILLS_LIST = [
@@ -669,10 +681,10 @@
 
     const ATTR_LABELS = { fisico: 'FÍSICO', mente: 'MENTE', emocao: 'EMOÇÃO' };
 
-    const STORAGE_KEY = 'sacrilegio_rpg_characters_v2';
-    const ACTIVE_ID_KEY = 'sacrilegio_rpg_active_id_v2';
-    const GM_UNLOCKED_KEY = 'sacrilegio_gm_unlocked_v2';
-    const SITE_UNLOCKED_KEY = 'sacrilegio_site_unlocked_v2';
+    const STORAGE_KEY = 'sacrilegio_rpg_characters_v3';
+    const ACTIVE_ID_KEY = 'sacrilegio_rpg_active_id_v3';
+    const GM_UNLOCKED_KEY = 'sacrilegio_gm_unlocked_v3';
+    const SITE_UNLOCKED_KEY = 'sacrilegio_site_unlocked_v3';
 
     let characters = [];
     let activeCharacterId = null;
@@ -714,10 +726,9 @@
         pd: { current: 15, max: 15 },
         attributes: { fisico: 6, mente: 8, emocao: 6 },
         skillsList: skillsList,
-        abilities: [{ id: 'ab_' + Date.now(), title: '', description: '' }],
-        relations: [
-          { id: 'rel_' + Date.now(), name: 'EXEMPLO', level: 1 }
-        ],
+        abilities: [],
+        mentalAbilityVal: 0, // tracker count for impeto/analise
+        relations: [],
         notes: '',
         updatedAt: Date.now()
       };
@@ -732,9 +743,9 @@
         });
       }
       char.skillsList.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' }));
-      if (!Array.isArray(char.relations)) {
-        char.relations = [];
-      }
+      if (!Array.isArray(char.abilities)) char.abilities = [];
+      if (!Array.isArray(char.relations)) char.relations = [];
+      if (char.mentalAbilityVal === undefined) char.mentalAbilityVal = 0;
       return char;
     }
 
@@ -1007,26 +1018,58 @@
     function renderAbilitiesList(char) {
       const list = document.getElementById('abilitiesList');
       const countLabel = document.getElementById('abilitiesCount');
-      const abilities = Array.isArray(char.abilities) ? char.abilities : [];
-      countLabel.textContent = `${abilities.length} ${abilities.length === 1 ? 'habilidade' : 'habilidades'}`;
+      const mentalDef = MENTAL_CHARACTERISTICS[char.mental] || MENTAL_CHARACTERISTICS.Executor;
+      const customAbilities = Array.isArray(char.abilities) ? char.abilities : [];
+      
+      const totalCount = 1 + customAbilities.length;
+      countLabel.textContent = `${totalCount} ${totalCount === 1 ? 'habilidade' : 'habilidades'}`;
 
-      if (abilities.length === 0) {
-        list.innerHTML = `<p class="text-xs text-gray-500 text-center py-3">Nenhuma habilidade especial adicionada ainda.</p>`;
-        return;
+      // Render Mental Characteristic Main Ability as Fixed #1 Box
+      let trackerMarkup = '';
+      if (mentalDef.hasTracker) {
+        const val = Number(char.mentalAbilityVal || 0);
+        let boxes = '';
+        for (let i = 1; i <= mentalDef.trackerMax; i++) {
+          const filled = i <= val;
+          boxes += `<button type="button" onclick="setMentalAbilityVal(${i})" class="w-6 h-6 rounded-md border border-gray-500 flex items-center justify-center transition ${filled ? 'bg-white text-obsidian font-bold' : 'bg-[#0d1015] hover:bg-gray-800'}"><span class="text-[11px]">${i <= val ? '•' : ''}</span></button>`;
+        }
+        trackerMarkup = `<div class="flex items-center gap-2 pt-1 pb-0.5 flex-wrap"><span class="text-[11px] uppercase tracking-wider text-gray-400 font-semibold">Marcadores (${val}/${mentalDef.trackerMax}):</span><div class="flex items-center gap-1.5">${boxes}</div></div>`;
       }
 
-      list.innerHTML = abilities.map((ab, idx) => `
+      let html = `
+        <div class="bg-[#0e131b] border border-gray-700/80 rounded-xl p-3.5 space-y-2 relative shadow">
+          <div class="flex items-center justify-between gap-2 border-b border-gray-800 pb-1.5">
+            <span class="font-display uppercase tracking-wider text-sm font-bold text-amber-300">${escapeHtml(mentalDef.abilityTitle)}</span>
+            <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-gray-800 text-gray-300 font-semibold">Habilidade de Característica</span>
+          </div>
+          <p class="text-xs sm:text-sm text-gray-300 whitespace-pre-line leading-relaxed">${escapeHtml(mentalDef.abilityDesc)}</p>
+          ${trackerMarkup}
+        </div>
+      `;
+
+      // Render custom abilities
+      html += customAbilities.map((ab, idx) => `
         <div class="bg-[#0d1015] border border-gray-800 rounded-xl p-3 space-y-2 relative group">
           <div class="flex items-center justify-between gap-2">
-            <input type="text" value="${escapeHtml(ab.title || '')}" oninput="updateAbility(${idx}, 'title', this.value)" placeholder="Nome da Habilidade #${idx + 1}" class="flex-1 bg-transparent border-b border-gray-800 focus:border-gray-500 text-sm font-bold text-white placeholder-gray-600 pb-1 focus:outline-none" />
+            <input type="text" value="${escapeHtml(ab.title || '')}" oninput="updateAbility(${idx}, 'title', this.value)" placeholder="Nome da Habilidade #${idx + 2}" class="flex-1 bg-transparent border-b border-gray-800 focus:border-gray-500 text-sm font-bold text-white placeholder-gray-600 pb-1 focus:outline-none" />
             <button type="button" onclick="removeAbility(${idx})" class="text-gray-500 hover:text-red-400 p-1 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
           </div>
           <textarea rows="2" oninput="updateAbility(${idx}, 'description', this.value)" placeholder="Descrição e efeitos..." class="w-full bg-transparent text-xs sm:text-sm text-gray-300 placeholder-gray-600 focus:outline-none resize-y leading-relaxed">${escapeHtml(ab.description || '')}</textarea>
         </div>
       `).join('');
+
+      list.innerHTML = html;
     }
 
-    // RELATIONS / VÍNCULOS RENDERING & INTERACTION
+    function setMentalAbilityVal(clickedVal) {
+      const char = getActiveCharacter();
+      if (!char) return;
+      const current = Number(char.mentalAbilityVal || 0);
+      char.mentalAbilityVal = (current === clickedVal) ? clickedVal - 1 : clickedVal;
+      saveState();
+      renderAbilitiesList(char);
+    }
+
     function renderRelationsList(char) {
       const container = document.getElementById('relationsList');
       if (!container) return;
@@ -1038,33 +1081,16 @@
       }
 
       container.innerHTML = relations.map((rel, idx) => {
-        const currentLevel = Number(rel.level || 0); // 0, 1, 2, 3
+        const currentLevel = Number(rel.level || 0);
         return `
           <div class="bg-[#0d1015] border border-gray-800 rounded-xl p-3 flex items-center justify-between gap-3 group">
-            <!-- Name Input -->
-            <input type="text"
-                   value="${escapeHtml(rel.name || '')}"
-                   oninput="updateRelation(${idx}, 'name', this.value)"
-                   placeholder="Nome do personagem..."
-                   class="flex-1 bg-transparent border-b border-gray-800 focus:border-gray-500 font-display uppercase tracking-wider text-sm sm:text-base font-bold text-white placeholder-gray-600 px-1 py-0.5 focus:outline-none" />
-
-            <!-- 3 Bond Circles (like Ordem reference image) -->
+            <input type="text" value="${escapeHtml(rel.name || '')}" oninput="updateRelation(${idx}, 'name', this.value)" placeholder="Nome do personagem..." class="flex-1 bg-transparent border-b border-gray-800 focus:border-gray-500 font-display uppercase tracking-wider text-sm sm:text-base font-bold text-white placeholder-gray-600 px-1 py-0.5 focus:outline-none" />
             <div class="flex items-center gap-2 sm:gap-3 shrink-0 px-2">
-              <button type="button" onclick="setRelationLevel(${idx}, 1)" title="1 Ponto de Vínculo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center transition ${currentLevel >= 1 ? 'bg-white' : 'bg-transparent'}">
-                ${currentLevel >= 1 ? '<span class="w-2.5 h-2.5 rounded-full bg-obsidian"></span>' : ''}
-              </button>
-              <button type="button" onclick="setRelationLevel(${idx}, 2)" title="2 Pontos de Vínculo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center transition ${currentLevel >= 2 ? 'bg-white' : 'bg-transparent'}">
-                ${currentLevel >= 2 ? '<span class="w-2.5 h-2.5 rounded-full bg-obsidian"></span>' : ''}
-              </button>
-              <button type="button" onclick="setRelationLevel(${idx}, 3)" title="3 Pontos de Vínculo" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center transition ${currentLevel >= 3 ? 'bg-white' : 'bg-transparent'}">
-                ${currentLevel >= 3 ? '<span class="w-2.5 h-2.5 rounded-full bg-obsidian"></span>' : ''}
-              </button>
+              <button type="button" onclick="setRelationLevel(${idx}, 1)" title="1 Ponto" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center transition ${currentLevel >= 1 ? 'bg-white' : 'bg-transparent'}">${currentLevel >= 1 ? '<span class="w-2.5 h-2.5 rounded-full bg-obsidian"></span>' : ''}</button>
+              <button type="button" onclick="setRelationLevel(${idx}, 2)" title="2 Pontos" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center transition ${currentLevel >= 2 ? 'bg-white' : 'bg-transparent'}">${currentLevel >= 2 ? '<span class="w-2.5 h-2.5 rounded-full bg-obsidian"></span>' : ''}</button>
+              <button type="button" onclick="setRelationLevel(${idx}, 3)" title="3 Pontos" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center transition ${currentLevel >= 3 ? 'bg-white' : 'bg-transparent'}">${currentLevel >= 3 ? '<span class="w-2.5 h-2.5 rounded-full bg-obsidian"></span>' : ''}</button>
             </div>
-
-            <!-- Remove Button -->
-            <button type="button" onclick="removeRelation(${idx})" title="Remover relação" class="p-1.5 text-gray-500 hover:text-red-400 transition">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <button type="button" onclick="removeRelation(${idx})" title="Remover" class="p-1.5 text-gray-500 hover:text-red-400 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
           </div>
         `;
       }).join('');
@@ -1074,11 +1100,7 @@
       const char = getActiveCharacter();
       if (!char) return;
       if (!Array.isArray(char.relations)) char.relations = [];
-      char.relations.push({
-        id: 'rel_' + Date.now(),
-        name: '',
-        level: 1
-      });
+      char.relations.push({ id: 'rel_' + Date.now(), name: '', level: 1 });
       saveState();
       renderRelationsList(char);
     }
@@ -1093,7 +1115,6 @@
     function setRelationLevel(index, clickedLevel) {
       const char = getActiveCharacter();
       if (!char || !char.relations?.[index]) return;
-      // If clicking the same level that is already active, toggle it off (0); otherwise set it
       const current = Number(char.relations[index].level || 0);
       char.relations[index].level = (current === clickedLevel) ? clickedLevel - 1 : clickedLevel;
       saveState();
@@ -1351,6 +1372,7 @@
       const char = getActiveCharacter();
       if (!char) return;
       char.mental = key;
+      char.mentalAbilityVal = 0; // reset tracker on change
       saveState();
       renderPlayerSheet();
       document.getElementById('mentalOptionsContainer').classList.add('hidden');
